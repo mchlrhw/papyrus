@@ -1,0 +1,10 @@
+[package]
+name = "papyrus"
+build = "build.rs"
+version = "0.1.0"
+
+[lib]
+crate-type = ["cdylib"]
+
+[build-dependencies.cbindgen]
+version = "0.1"
