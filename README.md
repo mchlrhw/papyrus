@@ -18,7 +18,13 @@ Install papryus:
 (venv) $ pip install . -v --editable
 ```
 
-Install the `websocket-client` package and spin up a Python interpreter:
+Run papyrus:
+```
+(venv) python -m papyrus
+```
+
+Install the `websocket-client` package and spin up a Python interpreter in
+another terminal:
 ```
 >>> from websocket import create_connection
 >>> ws = create_connection("ws://localhost:8888/echo")
