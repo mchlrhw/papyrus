@@ -1,3 +1,7 @@
+from collections import deque
+from threading import Lock
+
+from tornado.ioloop import PeriodicCallback
 from tornado.websocket import WebSocketHandler
 
 from .._native import ffi, lib
@@ -7,13 +11,18 @@ from .._native import ffi, lib
 def callback(h, s):
     handler = ffi.from_handle(h)
     s = ffi.unpack(s.data, s.len).decode("utf-8")
-    handler.write_message(s)
+
+    handler.queue.append(s)
 
 
 class EchoHandler(WebSocketHandler):
 
     def open(self):
         print("Websocket opened")
+        self.lock = Lock()
+        self.queue = deque()
+        self.pc = PeriodicCallback(self.sender, 10)
+        self.pc.start()
 
     def on_message(self, message):
         data = message.encode("utf-8")
@@ -22,3 +31,10 @@ class EchoHandler(WebSocketHandler):
 
     def on_close(self):
         print("Websocket closed")
+        self.pc.stop()
+
+    def sender(self):
+        msg_count = len(self.queue)
+        for _ in range(msg_count):
+            msg = self.queue.popleft()
+            self.write_message(msg)
