@@ -1,4 +1,4 @@
-# Papryus
+# Papyrus
 
 A proof of concept echo server, used to demonstrate Python/Rust interop using
 websockets as the transport. The interop is achieved through CFFI and uses the
